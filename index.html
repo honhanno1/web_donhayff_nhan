@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hnhan Mod Menu - OB54 Pro</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Audiowide&family=Share+Tech+Mono&display=swap');
+
+        :root {
+            --cyan: #00ff2f;
+            --red-neon: #ff0055;
+            --bg-color: #050508;
+            --panel-bg: rgba(13, 15, 24, 0.75);
+        }
+
+        body {
+            margin: 0;
+            padding: 15px;
+            background-color: var(--bg-color);
+            background-image: linear-gradient(rgba(18, 24, 41, 0.4) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(18, 24, 41, 0.4) 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: #fff;
+            font-family: 'Share Tech Mono', monospace;
+            letter-spacing: 1px;
+        }
+
+        /* --- Music Info Top --- */
+        .music-bar {
+            font-size: 11px;
+            color: #556080;
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+        }
+
+        /* --- Main Menu Container --- */
+        .menu-container {
+            width: 100%;
+            max-width: 380px;
+            background: var(--panel-bg);
+            border: 2px solid rgba(255, 0, 85, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .secure-badge {
+            color: var(--red-neon);
+        }
+
+        .brand-title {
+            text-align: center;
+            font-family: 'Audiowide', cursive;
+            font-size: 26px;
+            font-style: italic;
+            margin: 10px 0 5px 0;
+            color: var(--red-neon);
+            text-shadow: 0 0 10px rgba(255, 0, 85, 0.6);
+            letter-spacing: 2px;
+        }
+
+        .brand-sub {
+            text-align: center;
+            font-size: 11px;
+            color: #556080;
+            margin-bottom: 15px;
+        }
+
+        /* --- Thanh chuyển đổi tab --- */
+        .tab-navigation {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            color: #8a9fc4;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-family: 'Share Tech Mono', monospace;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            color: var(--cyan);
+            border-color: var(--cyan);
+        }
+
+        /* --- Tab System --- */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-type {
+            width: 100%;
+            padding: 12px;
+            background: #000;
+            border: 1px solid var(--cyan);
+            border-radius: 8px;
+            color: #fff;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 15px;
+            box-sizing: border-box;
+            outline: none;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #ff0055, rgba(255, 0, 85, 0.4));
+            border: 1px solid var(--red-neon);
+            color: #fff;
+            font-family: 'Share Tech Mono', monospace;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: 0.3s;
+            border-radius: 8px;
+        }
+
+        .action-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Loader Animation */
+        .loader-box {
+            display: none;
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        .circle-loader {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(0, 242, 254, 0.1);
+            border-top: 4px solid var(--cyan);
+            border-radius: 50%;
+            margin: 0 auto 15px auto;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; } to { opacity: 1; }
+        }
+
+        /* Results UI */
+        .results-box {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .core-text {
+            text-align: center;
+            color: #00ffaa;
+            font-size: 12px;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .row-data {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .lbl {
+            font-size: 13px;
+            color: #8a9fc4;
+        }
+
+        .val {
+            font-weight: bold;
+            color: var(--cyan);
+        }
+
+        .cheat-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .cheat-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cheat-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .cheat-percent {
+            font-size: 11px;
+            color: var(--cyan);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 22px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #222;
+            transition: .3s;
+            border-radius: 34px;
+            border: 1px solid #444;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: rgba(255, 0, 85, 0.6);
+            border-color: var(--red-neon);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(18px);
+            background-color: var(--red-neon);
+        }
+
+        /* Chọn phiên bản */
+        .game-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        .game-radio {
+            flex: 1;
+            box-sizing: border-box;
+        }
+
+        .game-radio input {
+            display: none;
+        }
+
+        .game-label {
+            display: block;
+            text-align: center;
+            padding: 14px 5px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            color: #8a9fc4;
+            transition: 0.25s;
+            text-transform: uppercase;
+        }
+
+        .game-radio input:checked + .game-label {
+            border: 1px solid var(--red-neon);
+            color: var(--red-neon);
+            background: rgba(255, 0, 85, 0.1);
+            box-shadow: 0 0 10px rgba(255, 0, 85, 0.2);
+        }
+
+        .apply-btn {
+            background: linear-gradient(90deg, #ff0055, #8000ff) !important;
+            border: 1px solid !important;
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.4);
+        }
+
+        .footer-text {
+            text-align: center;
+            font-size: 11px;
+            color: #444a5e;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body onclick="initAudio();" ontouchstart="initAudio();">
+
+    <div class="music-bar" id="musicStatus">
+        Chạm vào màn hình để tự động phát nhạc nền...
+    </div>
+
+    <div class="menu-container">
+        <div class="secure-badge">SECURE MODE ]</div>
+        <div class="brand-title">HHNAN MOD MENU</div>
+        <div class="brand-sub">[+] HỆ THỐNG ĐỘ NHẠY OB54 FULL OFFSET</div>
+
+        <!-- Thanh chuyển đổi giữa 2 Tab điều khiển -->
+        <div class="tab-navigation">
+            <button class="tab-btn active" onclick="switchTab(this, 'sensi-tab')">ĐỘ NHẠY</button>
+            <button class="tab-btn" onclick="switchTab(this, 'support-tab')">HỖ TRỢ KÉO TÂM</button>
+        </div>
+
+        <!-- === TAB ĐỘ NHẠY === -->
+        <div id="sensi-tab" class="tab-content active">
+            <div class="input-group">
+                <input type="text" id="phoneInput" class="input-type" placeholder="XIAOMI POCO C65">
+            </div>
+            <button class="action-btn" onclick="startAnalyzing()">PHÂN TÍCH CẤU TRÚC SENSI</button>
+
+            <!-- Loader chạy hiệu ứng % nạp code -->
+            <div id="loaderSection" class="loader-box">
+                <div class="circle-loader"></div>
+                <div id="progressText" class="loader-text">BYPASSING SYSTEM... 0%</div>
+            </div>
+
+            <!-- Bảng kết quả Sensi cấu trúc mới -->
+            <div class="results-box" id="resultsSection">
+                <div class="core-text">COREINJECTED: DEVICE ACTIVE</div>
+                <div class="row-data"><span class="lbl">GENERAL</span><span class="val" id="v1">0</span></div>
+                <div class="row-data"><span class="lbl">RED DOT SIGHT</span><span class="val" id="v2">0</span></div>
+                <div class="row-data"><span class="lbl">SCOPE 2X</span><span class="val" id="v3">0</span></div>
+                <div class="row-data"><span class="lbl">SCOPE 4X</span><span class="val" id="v4">0</span></div>
+                <div class="row-data"><span class="lbl">SNIPER SCOPE</span><span class="val" id="v5">0</span></div>
+                <div class="row-data" style="background: rgba(255,0,85,0.05); padding: 8px; border-radius: 4px;"><span class="lbl" style="color: var(--red-neon)">DPI SETTING:</span><span class="val" id="v6">0</span></div>
+                <div class="row-data"><span class="lbl">NÚT BẮN (SIZE VAL)</span><span class="val" id="v7">0</span></div>
+                <button class="action-btn" style="margin-top: 15px; border-color: var(--red-neon);" onclick="resetMenu()">QUÉT THIẾT BỊ MỚI</button>
+            </div>
+        </div>
+
+        <!-- === TAB HỖ TRỢ KÉO TÂM === -->
+        <div id="support-tab" class="tab-content">
+            <div class="cheat-option">
+                <div class="cheat-info"><span class="cheat-title">Ghim Tâm</span><span class="cheat-percent">Hiệu suất 67%</span></div>
+                <label class="switch"><input type="checkbox" class="aim-check"><span class="slider"></span></label>
+            </div>
+            <div class="cheat-option">
+                <div class="cheat-info"><span class="cheat-title">Fix Rung</span><span class="cheat-percent">Hiệu suất 50%</span></div>
+                <label class="switch"><input type="checkbox" class="aim-check"><span class="slider"></span></label>
+            </div>
+            <div class="cheat-option">
+                <div class="cheat-info"><span class="cheat-title">Ngắm Màn Hình</span><span class="cheat-percent">Tối ưu hóa cảm ứng</span></div>
+                <label class="switch"><input type="checkbox" class="aim-check"><span class="slider"></span></label>
+            </div>
+            <div class="cheat-option">
+                <div class="cheat-info"><span class="cheat-title">Đằm Tâm</span><span class="cheat-percent">Hiệu suất 80%</span></div>
+                <label class="switch"><input type="checkbox" class="aim-check"><span class="slider"></span></label>
+            </div>
+
+            <!-- Bộ chọn phiên bản game -->
+            <div class="game-selector">
+                <div class="game-radio">
+                    <input type="radio" id="ffNormal" name="gameVersion" checked>
+                    <label for="ffNormal" class="game-label">FREE FIRE NORMAL</label>
+                </div>
+                <div class="game-radio">
+                    <input type="radio" id="ffMax" name="gameVersion">
+                    <label for="ffMax" class="game-label">FREE FIRE MAX</label>
+                </div>
+            </div>
+            
+            <button class="action-btn apply-btn" onclick="applyDataCache()">ÁP DỤNG & DÁN CODE VÀO DATA CACHE</button>
+        </div>
+
+        <div class="footer-text">HNHAN MOD BRAND © 2026</div>
+    </div>
+
+    <!-- ======================================================= -->
+    <!-- DANH SÁCH PHÁT NHẠC TỰ ĐỘNG CHUYỂN BÀI - ADMIN HOÀI NHÂN -->
+    <!-- ======================================================= -->
+    <audio id="menuMusic" preload="auto">
+        <source id="audioSource" src="https://h.uguu.se/jHNYNfHl.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // MẢNG PLAYLIST CHỨA NHẠC: Fen muốn đổi bài chỉ cần sửa link trong dấu "" dưới đây thôi nhé!
+        const playlist = [
+            "https://n.uguu.se/oNTFTgcB.mp4", // Bài 1 dạo đầu của fen
+            "https://n.uguu.se/EPGgWiJd.mp3", // Bài 2 trọng tâm
+            "https://n.uguu.se/oNTFTgcB.mp4"  // Bài 3 trọng tâm
+        ];
+
+        let currentTrackIndex = 0;
+        let audioPlay = false;
+        const audio = document.getElementById("menuMusic");
+        const source = document.getElementById("audioSource");
+
+        // Hàm tải bài hát và ÉP PHÁT NGAY LẬP TỨC để sửa lỗi đứng nhạc
+        function loadTrack(index) {
+            if (source && audio) {
+                source.src = playlist[index];
+                audio.load();
+                
+                // Kỹ thuật tự kích hoạt bài tiếp theo mượt mà
+                let playPromise = audio.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        audioPlay = true;
+                        updateStatusText();
+                    }).catch(err => {
+                        console.log("Hệ thống đợi tương tác để phát tiếp:", err);
+                    });
+                }
+            }
+        }
+
+        // Lắng nghe sự kiện kết thúc bài hát để tự động nhảy sang bài kế tiếp vòng tròn
+        if (audio) {
+            audio.addEventListener("ended", function() {
+                currentTrackIndex++;
+                if (currentTrackIndex >= playlist.length) {
+                    currentTrackIndex = 0; // Hết danh sách tự hoành lại bài số 1
+                }
+                loadTrack(currentTrackIndex);
+            });
+        }
+
+        // Cập nhật trạng thái hiển thị thanh nhạc
+        function updateStatusText() {
+            let statusText = document.getElementById("musicStatus");
+            if (statusText) {
+                statusText.innerText = `🎵 STATUS: CORE INJECTED & PLAYING TRACK [${currentTrackIndex + 1}/${playlist.length}]`;
+                statusText.style.color = "#00ffaa";
+            }
+        }
+
+        // Kích hoạt phát nhạc mượt mà khi chạm màn hình không bị App24h chặn âm thanh
+        function initAudio() {
+            if (!audioPlay && audio) {
+                audio.play().then(() => {
+                    audioPlay = true;
+                    updateStatusText();
+                }).catch(err => {
+                    console.log("Chờ tương tác từ người dùng:", err);
+                });
+            }
+        }
+
+        // Hàm chuyển đổi qua lại giữa 2 Tab điều khiển
+        function switchTab(button, tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            button.classList.add('active');
+        }
+
+        // Hàm phân tích thuật toán Sensi (Loader %)
+        function startAnalyzing() {
+            let phoneDevice = document.getElementById("phoneInput").value.trim();
+            if(!phoneDevice) phoneDevice = "XIAOMI POCO C65";
+
+            document.getElementById("phoneInput").style.display = "none";
+            document.getElementById("loaderSection").style.display = "block";
+
+            let progress = 0;
+            let txt = document.getElementById("progressText");
+
+            let interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 8) + 2;
+                if(progress > 100) progress = 100;
+                
+                txt.innerText = `BYPASSING SYSTEM... ${progress}%`;
+
+                if(progress === 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        document.getElementById("loaderSection").style.display = "none";
+                        showResults(phoneDevice);
+                    }, 4000);
+                }
+            }, 100);
+        }
+
+        // Xuất thông số cấu trúc Sensi chuẩn bản OB54 sau khi quét xong
+        function showResults(device) {
+            document.getElementById("loaderSection").style.display = "none";
+            document.getElementById("resultsSection").style.display = "block";
+
+            document.getElementById("v1").innerText = Math.floor(Math.random() * (200 - 190) + 190) + " / General gần max";
+            document.getElementById("v2").innerText = Math.floor(Math.random() * (198 - 185) + 185) + " / Red Dot";
+            document.getElementById("v3").innerText = Math.floor(Math.random() * (197 - 180) + 180) + " / Scope 2x";
+            document.getElementById("v4").innerText = Math.floor(Math.random() * (196 - 175) + 175) + " / Scope 4x";
+            document.getElementById("v5").innerText = Math.floor(Math.random() * (130 - 100) + 100) + " / Sniper";
+            document.getElementById("v6").innerText = Math.floor(Math.random() * (580 - 450) + 450) + " DPI an toàn";
+            document.getElementById("v7").innerText = Math.floor(Math.random() * (48 - 42) + 42) + "% / Size nút bắn chuẩn nhất";
+        }
+
+        // Reset về ban đầu để quét thiết bị mới
+        function resetMenu() {
+            document.getElementById("resultsSection").style.display = "none";
+            document.getElementById("phoneInput").style.display = "block";
+            document.getElementById("progressText").innerText = "BYPASSING SYSTEM... 0%";
+        }
+
+        // Chức năng Áp dụng dán code Tab Hỗ trợ Kéo Tâm
+        function applyDataCache() {
+            let selectedGame = document.querySelector('input[name="gameVersion"]:checked').id === "ffNormal" ? "FREE FIRE NORMAL" : "FREE FIRE MAX";
+            
+            let checkboxes = document.querySelectorAll('.aim-check');
+            let anyChecked = false;
+
+            checkboxes.forEach(box => {
+                if(box.checked) anyChecked = true;
+            });
+
+            if(!anyChecked) {
+                alert("Vui Lòng Chọn Bật Ít Nhất Một Tính Năng Hỗ Trợ Kéo Tâm Trước!");
+                return;
+            }
+
+            alert(`[Hnhan Mod] Đã inject Thành Công Chuỗi Mã Offset OB54 Vào Tệp Tin Cache Data Của ${selectedGame}! Vào Game Và Trải Nghiệm Ngay.`);
+        }
+    </script>
+</body>
+</html>
